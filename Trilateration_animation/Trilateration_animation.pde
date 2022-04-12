@@ -1,22 +1,37 @@
 
 
 PImage blmap;
+PImage antenna;
 
 void setup() {
-  size(1200, 700);
+  //size(1200, 700);
+  fullScreen();
   textSize(26);
   
   blmap = loadImage("BanjaLukaMap.png");
-  blmap.resize(1200, 700);
+  //blmap.resize(1200, 700);
+  blmap.resize(width, height);
+  
+  antenna = loadImage("transmitter.png");
+  antenna.resize(50, 50);
 }
 
 public class Point {
   private float x;
   private float y;
   
+  private float incrementalCounuter = 0;
+  
   public Point(float x, float y) {
     this.x = x;
     this.y = y;
+  }
+  
+  public void checkForMovement(){
+   if(mousePressed == true && abs(mouseX - x) < 50 && abs(mouseY - y) < 50){
+     x = mouseX;
+     y = mouseY;
+   }
   }
   
   void setX(float x) {
@@ -42,6 +57,18 @@ public class Point {
   String toString() {
    return "X: " + x + "  Y: " + y; 
   }
+  
+  void drawPoint(){
+    image(antenna, x - 25, y - 25);
+    incrementalCounuter += 1;
+    if(incrementalCounuter > 200) incrementalCounuter = 0;
+    
+    noFill();
+    stroke(0);
+    for(int i = 0; i < 5; i ++){
+     circle(x, y, ((int)(incrementalCounuter + 50 *  i)) % 200); 
+    }
+  }
 }
 
 Point a = new Point(random(50, 1000), random(50, 700));
@@ -51,6 +78,10 @@ Point c = new Point(random(50, 1000), random(50, 700));
 void draw() {
   //background(76);
   background(blmap);
+  
+  a.checkForMovement();
+  b.checkForMovement();
+  c.checkForMovement();
   
   Point mouseP = new Point(mouseX, mouseY);
   
@@ -94,20 +125,36 @@ void draw() {
   line(b.getX(), b.getY(), mouseX, mouseY);
   line(c.getX(), c.getY(), mouseX, mouseY);
   
-  text(da, a.getX() + 10, a.getY() + 10);
-  text(db, b.getX() + 10, b.getY() + 10);
-  text(dc, c.getX() + 10, c.getY() + 10);
+  textSize(15);
+  text("Udaljenost od prve predajne stanice: " + da / 25.0, a.getX() - 100, a.getY() + 25);
+  text("Udaljenost od druge predajne stanice: " + db / 25.0, b.getX() - 100, b.getY() + 25);
+  text("Udaljenost od trece predajne stanice: " + dc / 25.0, c.getX() - 100, c.getY() + 25);
   
-  text(mouseX + " " + mouseY, mouseX + 10, mouseY + 10);
+  textSize(20);
   
-  fill(255, 0, 0);
-  text(calc_mouse.getX() + " " + calc_mouse.getY(), mouseX + 10, mouseY - 10);
+  fill(255);
+  text("Stvarna pozicija: " + mouseX + " " + mouseY, mouseX + 10, mouseY + 10);
   
-  fill(255, 0, 0);
-  ellipse(a.getX(), a.getY(), 10, 10);
-  ellipse(b.getX(), b.getY(), 10, 10);
-  ellipse(c.getX(), c.getY(), 10, 10);
+  text("Izracunata pozicija: " + calc_mouse.getX() + " " + calc_mouse.getY(), mouseX + 10, mouseY - 10);
+  textSize(26);
   
+  //fill(255, 0, 0);
+  //ellipse(a.getX(), a.getY(), 10, 10);
+  //ellipse(b.getX(), b.getY(), 10, 10);
+  //ellipse(c.getX(), c.getY(), 10, 10);
+  a.drawPoint();
+  b.drawPoint();
+  c.drawPoint();
+  
+  noFill();
+  stroke(220, 220, 255);
+  circle(a.getX(), a.getY(), 2 * da);
+  stroke(255, 220, 220);
+  circle(b.getX(), b.getY(), 2 * db);
+  stroke(220, 255, 220);
+  circle(c.getX(), c.getY(), 2 * dc);
+  
+  stroke(0);
   if (mousePressed) {
     fill(0);
   } else {
