@@ -60,15 +60,21 @@ public class Point {
   
   void drawPoint(){
     image(antenna, x - 25, y - 25);
-    incrementalCounuter += 1;
+    incrementalCounuter += 1.2;
     if(incrementalCounuter > 200) incrementalCounuter = 0;
     
     noFill();
     stroke(0);
+    
+    
     for(int i = 0; i < 5; i ++){
-     circle(x, y, ((int)(incrementalCounuter + 50 *  i)) % 200); 
+     float r = ((int)(incrementalCounuter + 50 *  i)) % 200;
+     strokeWeight(2);
+     circle(x, y, r); 
     }
+    strokeWeight(1);
   }
+  
 }
 
 Point a = new Point(random(50, 1000), random(50, 700));
@@ -78,6 +84,9 @@ Point c = new Point(random(50, 1000), random(50, 700));
 void draw() {
   //background(76);
   background(blmap);
+  
+  textSize(30);
+  text("Simulacija algoritma trijangulacije", 4 * width / 10, 50);
   
   a.checkForMovement();
   b.checkForMovement();
@@ -126,16 +135,16 @@ void draw() {
   line(c.getX(), c.getY(), mouseX, mouseY);
   
   textSize(15);
-  text("Udaljenost od prve predajne stanice: " + da / 25.0, a.getX() - 100, a.getY() + 25);
-  text("Udaljenost od druge predajne stanice: " + db / 25.0, b.getX() - 100, b.getY() + 25);
-  text("Udaljenost od trece predajne stanice: " + dc / 25.0, c.getX() - 100, c.getY() + 25);
+  text("Udaljenost od prve predajne stanice: " + da / 25.0 + " km.", a.getX() - 100, a.getY() + 25);
+  text("Udaljenost od druge predajne stanice: " + db / 25.0 + " km.", b.getX() - 100, b.getY() + 25);
+  text("Udaljenost od trece predajne stanice: " + dc / 25.0 + " km.", c.getX() - 100, c.getY() + 25);
   
   textSize(20);
   
   fill(255);
-  text("Stvarna pozicija: " + mouseX + " " + mouseY, mouseX + 10, mouseY + 10);
+  text("Stvarna pozicija: " + (mouseX * (44.58360 - 45.02073) / width + 45.02019) + " " + (mouseY * (17.82118 - 16.55340) / height + 16.55234), mouseX + 10, mouseY + 10);
   
-  text("Izracunata pozicija: " + calc_mouse.getX() + " " + calc_mouse.getY(), mouseX + 10, mouseY - 10);
+  text("Izracunata pozicija: " + (calc_mouse.getX() * (44.58360 - 45.02073) / width + 45.02019) + " " + (calc_mouse.getY() * (17.82118 - 16.55234) / height + 16.55340), mouseX + 10, mouseY - 10);
   textSize(26);
   
   //fill(255, 0, 0);
@@ -162,5 +171,6 @@ void draw() {
   }
   ellipse(mouseX, mouseY, 10, 10);
   
+  text("Pritisni na predajne stanice da ih pomjeras", 7 * width / 10, 14 * height / 15);
   
 }
